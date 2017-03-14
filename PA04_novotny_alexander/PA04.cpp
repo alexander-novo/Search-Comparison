@@ -12,11 +12,13 @@
 #define MIN_VALUE 0
 #define MAX_VALUE 1000000
 
-void doAlgorithmTest ( std::mt19937&, unsigned );
-void doAlgorithmIteration ( unsigned, std::mt19937&, sortData*, bool = false );
-void fillRandomValues ( unsigned* , unsigned, std::mt19937& );
+void doAlgorithmTest ( std::mt19937*, unsigned );
+void doAlgorithmIteration ( unsigned, std::mt19937*, sortData* );
+void fillRandomValues ( unsigned* , unsigned, std::mt19937* );
+void fillSortedValues ( unsigned*, unsigned );
 void copyValues ( unsigned*, unsigned*, unsigned );
-void initRNG ( std::mt19937& );
+void printData ( sortData*, unsigned, unsigned );
+void initRNG ( std::mt19937* );
 
 void resetData ( sortData* );
 
@@ -24,16 +26,16 @@ int main ()
 {
     std::mt19937 rng;
 
-    initRNG ( rng );
+    initRNG ( &rng );
 
     for ( unsigned numValues = 1000; numValues <= MAX_NUM_VALUES; numValues *= 10 )
     {
-        doAlgorithmTest ( rng, numValues );
+        doAlgorithmTest ( &rng, numValues );
     }
     
 }
 
-void doAlgorithmTest ( std::mt19937& rng, unsigned numValues )
+void doAlgorithmTest ( std::mt19937* rng, unsigned numValues )
 {
     sortData data [ NUM_ALGORITHMS ];
 
@@ -44,32 +46,34 @@ void doAlgorithmTest ( std::mt19937& rng, unsigned numValues )
         doAlgorithmIteration ( numValues, rng, data );
     }
 
-    std::cout << "Average time for Insertion Sort on " << numValues
-        << " values: " << data [ 0 ].time.count () / NUM_ITERATIONS << std::endl;
-    std::cout << "Average swaps: " << data [ 0 ].swaps / NUM_ITERATIONS 
-        << ", comparisons: " << data [ 0 ].comparisons / NUM_ITERATIONS << std::endl;
-    std::cout << "Average time for Quick Sort on " << numValues
-        << " values: " << data [ 1 ].time.count () / NUM_ITERATIONS << std::endl;
-    std::cout << "Average swaps: " << data [ 1 ].swaps / NUM_ITERATIONS
-        << ", comparisons: " << data [ 1 ].comparisons / NUM_ITERATIONS << std::endl;
-    std::cout << "Average time for Counting Sort on " << numValues
-        << " values: " << data [ 2 ].time.count () / NUM_ITERATIONS << std::endl;
-    std::cout << "Average swaps: " << data [ 2 ].swaps / NUM_ITERATIONS
-        << ", comparisons: " << data [ 2 ].comparisons / NUM_ITERATIONS << std::endl;
+    printData ( data, numValues, NUM_ITERATIONS );
 
     std::cout << std::endl;
+    resetData ( data );
 
-    //oAlgorithmIteration()
+    doAlgorithmIteration ( numValues, nullptr, data );
+
+    std::cout << "Pre-sorted data:" << std::endl << std::endl;
+    printData ( data, numValues, 1 );
+
+    std::cout << "---------------------------------" << std::endl;
 }
 
-void doAlgorithmIteration ( unsigned numValues, std::mt19937& rng, sortData* data, bool sorted )
+void doAlgorithmIteration ( unsigned numValues, std::mt19937* rng, sortData* data )
 {
     unsigned* master_values = new unsigned [ numValues ];
     unsigned* temp_values = new unsigned [ numValues ];
     unsigned* sorted_values = new unsigned [ numValues ];
     std::chrono::high_resolution_clock::time_point start;
     
-    fillRandomValues ( master_values, numValues, rng );
+    if ( rng != nullptr )
+    {
+        fillRandomValues ( master_values, numValues, rng );
+    }
+    else
+    {
+        fillSortedValues ( master_values, numValues );
+    }
 
     copyValues ( master_values, temp_values, numValues );
     start = std::chrono::high_resolution_clock::now ();
@@ -100,12 +104,20 @@ void doAlgorithmIteration ( unsigned numValues, std::mt19937& rng, sortData* dat
     delete[] sorted_values;
 }
 
-void fillRandomValues ( unsigned* values, unsigned size, std::mt19937& rng )
+void fillRandomValues ( unsigned* values, unsigned size, std::mt19937* rng )
 {
     std::uniform_int_distribution<unsigned> valueDistribution ( MIN_VALUE, MAX_VALUE );
     for ( unsigned valueIndex = 0; valueIndex < size; valueIndex++ )
     {
-        values [ valueIndex ] = valueDistribution ( rng );
+        values [ valueIndex ] = valueDistribution ( *rng );
+    }
+}
+
+void fillSortedValues ( unsigned* values, unsigned size )
+{
+    for ( unsigned valueIndex = 0; valueIndex < size; valueIndex++ )
+    {
+        values [ valueIndex ] = valueIndex;
     }
 }
 
@@ -117,11 +129,27 @@ void copyValues ( unsigned* from, unsigned* to, unsigned size )
     }
 }
 
-void initRNG ( std::mt19937& rng )
+void printData ( sortData* data, unsigned numValues, unsigned numIterations )
+{
+    std::cout << "Average time for Insertion Sort on " << numValues
+        << " values: " << data [ 0 ].time.count () / numIterations << std::endl;
+    std::cout << "Average swaps: " << data [ 0 ].swaps / numIterations
+        << ", comparisons: " << data [ 0 ].comparisons / numIterations << std::endl;
+    std::cout << "Average time for Quick Sort on " << numValues
+        << " values: " << data [ 1 ].time.count () / numIterations << std::endl;
+    std::cout << "Average swaps: " << data [ 1 ].swaps / numIterations
+        << ", comparisons: " << data [ 1 ].comparisons / numIterations << std::endl;
+    std::cout << "Average time for Counting Sort on " << numValues
+        << " values: " << data [ 2 ].time.count () / numIterations << std::endl;
+    std::cout << "Average swaps: " << data [ 2 ].swaps / numIterations
+        << ", comparisons: " << data [ 2 ].comparisons / numIterations << std::endl;
+}
+
+void initRNG ( std::mt19937* rng )
 {
     std::random_device rd;
     unsigned seed = rd.entropy () ? rd () : std::time ( NULL );
-    rng.seed ( seed );
+    rng->seed ( seed );
 }
 
 void resetData ( sortData* data )
