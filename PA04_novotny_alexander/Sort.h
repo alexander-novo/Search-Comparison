@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <utility>
 #include <chrono>
+#include <cstring>
 
 struct sortData
 {

@@ -132,15 +132,15 @@ void copyValues ( unsigned* from, unsigned* to, unsigned size )
 void printData ( sortData* data, unsigned numValues, unsigned numIterations )
 {
     std::cout << "Average time for Insertion Sort on " << numValues
-        << " values: " << data [ 0 ].time.count () / numIterations << std::endl;
+        << " values: " << data [ 0 ].time.count () / numIterations << " nanoseconds" << std::endl;
     std::cout << "Average swaps: " << data [ 0 ].swaps / numIterations
         << ", comparisons: " << data [ 0 ].comparisons / numIterations << std::endl;
     std::cout << "Average time for Quick Sort on " << numValues
-        << " values: " << data [ 1 ].time.count () / numIterations << std::endl;
+        << " values: " << data [ 1 ].time.count () / numIterations << " nanoseconds" << std::endl;
     std::cout << "Average swaps: " << data [ 1 ].swaps / numIterations
         << ", comparisons: " << data [ 1 ].comparisons / numIterations << std::endl;
     std::cout << "Average time for Counting Sort on " << numValues
-        << " values: " << data [ 2 ].time.count () / numIterations << std::endl;
+        << " values: " << data [ 2 ].time.count () / numIterations << " nanoseconds" << std::endl;
     std::cout << "Average swaps: " << data [ 2 ].swaps / numIterations
         << ", comparisons: " << data [ 2 ].comparisons / numIterations << std::endl;
 }
