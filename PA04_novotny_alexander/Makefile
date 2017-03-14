@@ -5,8 +5,8 @@ CFLAGS=-c -Wall -std=c++11
 all: sort
 
 # Main program for assignment
-sort: PA04.o QuickSort.o InsertionSort.o CountingSort.o
-	g++ PA04.o QuickSort.o InsertionSort.o CountingSort.o -o $(PROGRAM_NAME)
+sort: PA04.o QuickSort.o InsertionSort.o CountingSort.o Sort.o
+	g++ PA04.o QuickSort.o InsertionSort.o CountingSort.o Sort.o -o $(PROGRAM_NAME)
 
 %.o: %.cpp
 	g++ $(CFLAGS) $<
