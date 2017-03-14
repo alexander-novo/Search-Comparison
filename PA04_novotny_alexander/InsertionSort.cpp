@@ -1,5 +1,26 @@
+// IMPLEMENTATION INFORMATION /////////////////////////////////////////////////
+/**
+  * @file InsertionSort.cpp
+  *
+  * @brief Contains the implementation of insertion sort from Sort.h
+  */
 #include "Sort.h"
 
+/**
+  * @brief sorts an array
+  *
+  * @par Algorithm
+  *      Starting from the left, shift every value leftwards into its rightful place
+  *
+  * @param[in] values
+  *            The array to be sorted
+  *
+  * @param[in] size
+  *            The size of values
+  *
+  * @param[out] data
+  *             Keeps track of algorithm data such as comparisons and swaps performed
+  */
 void insertionSort ( unsigned* values, unsigned size, sortData* data )
 {
     //Loop through every value in the array

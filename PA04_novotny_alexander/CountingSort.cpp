@@ -1,5 +1,37 @@
+// IMPLEMENTATION INFORMATION /////////////////////////////////////////////////
+/**
+  * @file CountingSort.cpp
+  *
+  * @brief Implementation of counting sort from Sort.h
+  */
 #include "Sort.h"
 
+/**
+  * @brief Sorts an array
+  * 
+  * @par Algorithm
+  *      Counts every unique possible value, then figures out the index each
+  *      value belongs in by adding the previous index to the count
+  *
+  * @pre re must be at least as large as values
+  *
+  * @pre values must not contain any values less than max
+  *
+  * @param[in] values
+  *            The array to sort
+
+  * @param[in] size
+  *            The size of values
+  *
+  * @param[in] max
+  *            The maximum possible value in values
+  *
+  * @param[out] re
+  *             The sorted array
+  *
+  * @param[out] data
+  *             Keeps track of algorithm data such as comparisons and swaps performed
+  */
 void countingSort ( unsigned* values, unsigned* re,
                     unsigned size, unsigned max, sortData* data )
 {
